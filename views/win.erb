@@ -1,8 +1,11 @@
 <h1>You Win!</h1>
+<% if @game.check_win_or_lose == :win%>
+	<p>
+	  The word was
+	  <span class="win"><%= @game.word %></span>.
+	</p>
 
-<p>
-  The word was
-  <span class="win"><%= @game.word %></span>.
-</p>
-
-<%= erb :new %>
+	<%= erb :new %>
+<% else %>
+	<p> Hey, no cheating! </p>
+<% end %>
