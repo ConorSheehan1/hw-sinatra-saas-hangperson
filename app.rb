@@ -39,16 +39,33 @@ class HangpersonApp < Sinatra::Base
   # If a guess is invalid, set flash[:message] to "Invalid guess."
   post '/guess' do
     letter = params[:guess].to_s[0] || ""
+    letter.downcase! if letter != ""
+
     ### YOUR CODE HERE ###
-    if @game.guesses.include? letter
+    if letter == ""
+      flash[:message] = "Please choose a letter"
+    elsif @game.guesses.include? letter
       flash[:message] = "You have already used that letter."     
     elsif letter =~ /[^a-zA-Z]/
       flash[:message] = "Invalid guess."
     else
+      # include every unique guess in guesses
+      # only include wrong ones in wrong_guesses
+      if !@game.word.include? letter
+        @game.wrong_guesses += letter
+      end
       @game.guesses += letter
+      
     end
 
-    redirect '/show'
+    # win lose logic
+    if @game.wrong_guesses.length >= 7
+      redirect "/lose"
+    elsif !@game.word_with_guesses.include? "-"
+      redirect "/win"
+    else
+      redirect '/show'
+    end
   end
   
   # Everytime a guess is made, we should eventually end up at this route.
@@ -58,6 +75,7 @@ class HangpersonApp < Sinatra::Base
   # wrong_guesses and word_with_guesses from @game.
   get '/show' do
     ### YOUR CODE HERE ###
+
     erb :show # You may change/remove this line
   end
   

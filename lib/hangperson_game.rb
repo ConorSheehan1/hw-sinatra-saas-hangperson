@@ -24,6 +24,15 @@ class HangpersonGame
   end
 
   def word_with_guesses
+    to_return = ""
+    self.word.split("").each do |char|
+      if guesses.include? char
+        to_return += char
+      else
+        to_return += "-"
+      end
+    end
+    return to_return
   end
 
 end
