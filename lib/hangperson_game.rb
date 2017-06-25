@@ -35,4 +35,25 @@ class HangpersonGame
     return to_return
   end
 
+  def guess(letter)
+    raise ArgumentError.new("Guess cannot be empty") if letter.nil? || letter.empty? || letter =~ /[^a-zA-Z]/
+    # include every unique guess in guesses
+    # only include wrong ones in wrong_guesses
+    letter = letter.downcase
+    if !self.word.include? letter
+      if !self.wrong_guesses.include? letter
+        self.wrong_guesses += letter 
+      else
+        return false
+      end
+    else
+      # only add letter to guesses if it's not in there already
+      if !self.guesses.include? letter
+        self.guesses += letter 
+      else
+        return false
+      end
+    end
+  end
+
 end

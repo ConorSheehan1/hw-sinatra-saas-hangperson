@@ -39,23 +39,16 @@ class HangpersonApp < Sinatra::Base
   # If a guess is invalid, set flash[:message] to "Invalid guess."
   post '/guess' do
     letter = params[:guess].to_s[0] || ""
-    letter.downcase! if letter != ""
 
     ### YOUR CODE HERE ###
     if letter == ""
       flash[:message] = "Please choose a letter"
-    elsif @game.guesses.include? letter
+    elsif @game.guesses.include?(letter) || @game.wrong_guesses.include?(letter)
       flash[:message] = "You have already used that letter."     
     elsif letter =~ /[^a-zA-Z]/
       flash[:message] = "Invalid guess."
     else
-      # include every unique guess in guesses
-      # only include wrong ones in wrong_guesses
-      if !@game.word.include? letter
-        @game.wrong_guesses += letter
-      end
-      @game.guesses += letter
-      
+      @game.guess(letter)      
     end
 
     # win lose logic
