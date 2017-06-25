@@ -52,10 +52,9 @@ class HangpersonApp < Sinatra::Base
     end
 
     # win lose logic
-    if @game.wrong_guesses.length >= 7
-      redirect "/lose"
-    elsif !@game.word_with_guesses.include? "-"
-      redirect "/win"
+    win_lose = @game.check_win_or_lose
+    if win_lose == :lose || win_lose == :win
+      redirect "/#{win_lose.to_s}"
     else
       redirect '/show'
     end
